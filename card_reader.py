@@ -6,13 +6,14 @@ import os
 dotenv.load_dotenv()
 
 before_read_student_id = ""
+DOMAIN = os.getenv("DOMAIN")
 
 def callback(card):
     global before_read_student_id
     if card.id != before_read_student_id:
         print(card.id)
         requests.post(
-            f"http://172.21.45.37:8000/room_logs",
+            f"http://{DOMAIN}:8000/room_logs",
             json.dumps({
                 "token": os.getenv("TOKEN"),
                 "student_id": card.id

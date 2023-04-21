@@ -10,6 +10,7 @@ import uvicorn
 app = FastAPI()
 dotenv.load_dotenv()
 TOKEN = os.getenv("TOKEN")
+DOMAIN = os.getenv("DOMAIN")
 
 def get_db_connection():
     con = sqlite3.connect("main.db")
@@ -88,4 +89,4 @@ def get_room_logs(day: datetime.date):
     return [{"id": d[0], "user_id": d[1], "created_at": d[2]} for d in data]
 
 
-uvicorn.run(app=app, host="172.21.45.37", port=8000)
+uvicorn.run(app=app, host=DOMAIN, port=8000)
