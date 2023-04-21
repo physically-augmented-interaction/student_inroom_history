@@ -12,7 +12,7 @@ def callback(card):
     if card.id != before_read_student_id:
         print(card.id)
         requests.post(
-            f"http://localhost:8000/room_logs",
+            f"http://172.21.45.37:8000/room_logs",
             json.dumps({
                 "token": os.getenv("TOKEN"),
                 "student_id": card.id

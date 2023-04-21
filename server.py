@@ -5,6 +5,7 @@ import dotenv
 import datetime
 import requests
 import json
+import uvicorn
 
 app = FastAPI()
 dotenv.load_dotenv()
@@ -87,3 +88,4 @@ def get_room_logs(day: datetime.date):
     return [{"id": d[0], "user_id": d[1], "created_at": d[2]} for d in data]
 
 
+uvicorn.run(app=app, host="172.21.45.37", port=8000)
