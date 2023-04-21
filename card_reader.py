@@ -5,10 +5,12 @@ import json
 import os
 import sqlite3
 import datetime
+import time
 dotenv.load_dotenv()
 
 before_read_student_id = ""
 DOMAIN = os.getenv("DOMAIN")
+last_touch = time.time()
 
 def get_db_connection():
     con = sqlite3.connect("main.db")
@@ -44,7 +46,8 @@ def on_room(student_id: str):
 
 def callback(card):
     global before_read_student_id
-    if card.id != before_read_student_id:
+    if card.id != before_read_student_id or last_touch + 60 > time.time() :
+        last_touch = time.time()
         print(card.id)
         on_room(card.id)
         before_read_student_id = card.id
