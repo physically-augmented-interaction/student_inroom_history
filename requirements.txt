@@ -1,2 +1,2 @@
-Flask
-nfcpy
+fastapi
+uvicorn[standard]
