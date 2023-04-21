@@ -3,6 +3,8 @@ import sqlite3
 import os
 import dotenv
 import datetime
+import requests
+import json
 
 app = FastAPI()
 dotenv.load_dotenv()
@@ -53,8 +55,24 @@ def create_room_log(student_id: str, token: str):
             status_code=status.HTTP_400_BAD_REQUEST,
             detail=f"指定したTOKENが正しくありません"
             )
+    cor.execute(f"SELECT id, name FROM user WHERE student_id = \"{student_id}\";")
+    user = cor.fetchone()
+    datestr = datetime.datetime.now().today().strftime("%Y-%m-%d")
+    print(datestr)
+    cor.execute(f"SELECT * FROM room_log WHERE user_id = \"{student_id}\" AND created_at BETWEEN \"{datestr} 00:00:00\" AND \"{datestr} 23:59:00\";")
+    logs = cor.fetchall()
+    print(logs)
+
+    res = requests.post(
+        os.getenv("WEBHOOK_URL"),
+        json.dumps({
+            "username": "room-log-bot", 
+            "icon_emoji": ":parrot_rainbow:",
+            "channel": "#room-log",
+            "text": f"{user[1]}さんが{'来た！' if len(logs)%2 == 0 else '帰った！'}" 
+        })
+        )
     cor.execute(f"INSERT INTO room_log(user_id) VALUES(\"{student_id}\")")
-    
     con.commit()
     con.close()
     return {"result": "created"}
